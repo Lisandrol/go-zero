@@ -2,6 +2,7 @@ package zrpc
 
 import (
 	"log"
+	"strings"
 	"time"
 
 	"github.com/zeromicro/go-zero/zrpc/internal"
@@ -79,9 +80,12 @@ func NewClient(c RpcClientConf, options ...ClientOption) (Client, error) {
 	}
 
 	client, err := internal.NewClient(target, c.Middlewares, opts...)
-	if err != nil {
+	if err != nil && !strings.Contains(err.Error(), "make sure rpc service") {
 		return nil, err
 	}
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	return &RpcClient{
 		client: client,
