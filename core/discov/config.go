@@ -19,6 +19,7 @@ type EtcdConf struct {
 	CertKeyFile        string `json:",optional=CertFile"`
 	CACertFile         string `json:",optional=CertFile"`
 	InsecureSkipVerify bool   `json:",optional"`
+	HealthForceCheck   bool   `json:",optional"`
 }
 
 // HasAccount returns if account provided.

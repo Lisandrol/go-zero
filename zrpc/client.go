@@ -2,7 +2,6 @@ package zrpc
 
 import (
 	"log"
-	"strings"
 	"time"
 
 	"github.com/zeromicro/go-zero/zrpc/internal"
@@ -79,17 +78,20 @@ func NewClient(c RpcClientConf, options ...ClientOption) (Client, error) {
 		return nil, err
 	}
 
-	client, err := internal.NewClient(target, c.Middlewares, opts...)
-	if err != nil && !strings.Contains(err.Error(), "make sure rpc service") {
-		return nil, err
+	if c.Etcd.HealthForceCheck {
+		client, err := internal.NewClient(target, c.Middlewares, opts...)
+		if err != nil {
+			return nil, err
+		}
+		return &RpcClient{
+			client: client,
+		}, nil
 	}
-	//if err != nil {
-	//	return nil, err
-	//}
 
 	return &RpcClient{
-		client: client,
+		client: nil,
 	}, nil
+
 }
 
 // NewClientWithTarget returns a Client with connecting to given target.
